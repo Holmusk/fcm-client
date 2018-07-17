@@ -1,34 +1,30 @@
-{-# LANGUAGE BangPatterns     #-}
-{-# LANGUAGE RecordWildCards  #-}
+{-# LANGUAGE RecordWildCards #-}
 
+module CliArgs
+       ( CliArgs (..)
+       , CliCmd (..)
+       , CliJsonBatchArgs (..)
+       , runWithArgs
+       ) where
 
-module CliArgs (
-  CliArgs(..)
-, CliCmd(..)
-, CliJsonBatchArgs(..)
-, runWithArgs
-) where
+import Control.Lens
+import Data.List.NonEmpty (nonEmpty)
+import FCMClient.Types
+import Options.Applicative
+import System.Environment
 
-
-import           Control.Lens
 import qualified Data.Aeson as J
 import qualified Data.ByteString.Lazy.Char8 as LB
-import           Data.List.NonEmpty (nonEmpty)
-import           Data.Monoid
 import qualified Data.Text as T
 import qualified FCMClient.JSON.Types as J
-import           FCMClient.Types
-import           Options.Applicative
-import           System.Environment
 
-
-data CliArgs = CliArgs { cliAuthKey:: String
-                       , cliCmd:: CliCmd
+data CliArgs = CliArgs { cliAuthKey :: String
+                       , cliCmd     :: CliCmd
                        }
 
-data CliJsonBatchArgs = CliJsonBatchArgs { cliBatchInput :: (Maybe FilePath)
+data CliJsonBatchArgs = CliJsonBatchArgs { cliBatchInput  :: (Maybe FilePath)
                                          , cliBatchOutput :: (Maybe FilePath)
-                                         , cliBatchConc :: Int
+                                         , cliBatchConc   :: Int
                                          }
 
 data CliCmd = CliCmdSendJsonBatch CliJsonBatchArgs

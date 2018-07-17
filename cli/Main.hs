@@ -1,33 +1,30 @@
-{-# LANGUAGE BangPatterns            #-}
-{-# LANGUAGE OverloadedStrings       #-}
-{-# LANGUAGE RankNTypes              #-}
-{-# LANGUAGE RecordWildCards         #-}
-{-# LANGUAGE ScopedTypeVariables     #-}
-
+{-# LANGUAGE BangPatterns        #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE RankNTypes          #-}
+{-# LANGUAGE RecordWildCards     #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
 
+import CliArgs
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Resource
+import Control.Retry
+import Data.Aeson
+import Data.Conduit
+import Data.Conduit.Async
+import Data.Default.Class
+import FCMClient
+import FCMClient.Types
+import System.IO
 
-import           CliArgs
 import qualified Control.Concurrent.Async as A
-import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Resource
-import           Control.Retry
-import           Data.Aeson
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.ByteString.Lazy.UTF8 as LUTF8
 import qualified Data.ByteString.UTF8 as UTF8
-import           Data.Conduit
-import           Data.Conduit.Async
 import qualified Data.Conduit.Binary as CB
 import qualified Data.Conduit.List as CL
-import           Data.Default.Class
-import           Data.Monoid
-import           FCMClient
-import           FCMClient.Types
-import           System.IO
-
 
 main :: IO ()
 main = runWithArgs $ \CliArgs{..} -> do
@@ -43,15 +40,15 @@ main = runWithArgs $ \CliArgs{..} -> do
       sendMessageBatch CliJsonBatchArgs{..} = do
         let buf c = buffer' cliBatchConc c
 
-        (batchInputConduit cliBatchInput =$= parseInputConduit)
+        (batchInputConduit cliBatchInput .| parseInputConduit)
           `buf`
-          (callFCMConduit (UTF8.fromString cliAuthKey) =$= runInParallel cliBatchConc)
+          (callFCMConduit (UTF8.fromString cliAuthKey) .| runInParallel cliBatchConc)
           `buf`
-          (encodeOutputConduit =$= batchOutputConduit cliBatchOutput)
+          (encodeOutputConduit .| batchOutputConduit cliBatchOutput)
 
 
   case cliCmd
-    of CliCmdSendMessage msgMod -> sendMessage msgMod
+    of CliCmdSendMessage msgMod  -> sendMessage msgMod
        CliCmdSendJsonBatch bargs -> runResourceT $ runCConduit $ sendMessageBatch bargs
 
 
@@ -64,7 +61,7 @@ main = runWithArgs $ \CliArgs{..} -> do
 -- of request tracking/debugging fields that makes it easier to interpret results.
 parseInputConduit :: (MonadIO m)
                   => Conduit BS.ByteString m (Either (BS.ByteString, String) (Value, FCMMessage))
-parseInputConduit = CB.lines =$= CL.map (\line -> do
+parseInputConduit = CB.lines .| CL.map (\line -> do
   jObj <- case eitherDecode' $ LBS.fromStrict line
             of Right v -> Right v
                Left  e -> Left (line, e)
