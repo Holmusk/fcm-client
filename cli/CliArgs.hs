@@ -141,6 +141,11 @@ parseCliCmdSendMessage = CliCmdSendMessage <$>
                  <> short 'b'
                  <> help "notification body text"))
 
+      <..> fmap (set $ fcmWithNotification . fcmAndroidChannelId)
+                (optionalText
+                  ( long "android-channel-id"
+                 <> help "Android: The notification's channel id (new in Android O).  The app must create a channel with this channel ID before any notification with this channel ID is received.  If you don't send this channel ID in the request, or if the channel ID provided has not yet been created by the app, FCM uses the channel ID specified in the app manifest."))
+
       <..> fmap (set $ fcmWithNotification . fcmIcon)
                 (optionalText
                   ( long "icon"

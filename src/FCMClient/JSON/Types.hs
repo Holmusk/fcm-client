@@ -16,6 +16,7 @@ module FCMClient.JSON.Types (
 , FCMNotification
 , fcmTitle
 , fcmBody
+, fcmAndroidChannelId
 , fcmIcon
 , fcmSound
 , fcmTag
@@ -110,6 +111,17 @@ data FCMNotification =
     -- Indicates notification body text.
   , _fcmBody :: !(Maybe Text)
 
+    -- | android_channel_id  Optional, string
+    -- The notification's channel id (new in Android O). <https://developer.android.com/preview/features/notification-channels.html>
+    --
+    -- The app must create a channel with this channel ID before any notification
+    -- with this channel ID is received.
+    --
+    -- If you don't send this channel ID in the request, or if the channel ID
+    -- provided has not yet been created by the app, FCM uses the channel ID
+    -- specified in the app manifest.
+  , _fcmAndroidChannelId :: !(Maybe Text)
+
     -- | icon   Optional, string
     -- Android: Indicates notification icon. Sets value to myicon for drawable resource myicon.
   , _fcmIcon :: !(Maybe Text)
@@ -186,7 +198,7 @@ $(deriveJSON (aesonPrefix snakeCase) { omitNothingFields = True } ''FCMNotificat
 
 
 instance Default FCMNotification where
-  def = FCMNotification Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
+  def = FCMNotification Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
 
 
 -- | FCM Message as defined in https://firebase.google.com/docs/cloud-messaging/http-server-ref#send-downstream
