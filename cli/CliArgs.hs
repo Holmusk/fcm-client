@@ -8,6 +8,7 @@ module CliArgs
 import Control.Lens
 import Data.Default.Class
 import Data.List.NonEmpty (nonEmpty)
+import Data.Monoid ((<>))
 import FCMClient.Types
 import Options.Applicative
 import System.Environment

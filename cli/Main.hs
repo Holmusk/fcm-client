@@ -13,6 +13,7 @@ import Control.Retry
 import Data.Aeson
 import Data.Conduit
 import Data.Conduit.Async
+import Data.Monoid ((<>))
 import FCMClient
 import FCMClient.Types
 import System.IO
