@@ -28,7 +28,7 @@ module FCMClient.JSON.Types (
 , fcmTitleLocArgs
 , FCMMessage
 , fcmTo
-, fcmRegistrationIDs
+, fcmRegistrationIds
 , fcmCondition
 , fcmCollapseKey
 , fcmPriority
@@ -206,7 +206,7 @@ data FCMMessage =
     -- Use this parameter only for multicast messaging, not for single
     -- recipients. Multicast messages (sending to more than 1 registration tokens) are
     -- allowed using HTTP JSON format only.
-  , _fcmRegistrationIDs :: !(Maybe (NonEmpty Text))
+  , _fcmRegistrationIds :: !(Maybe (NonEmpty Text))
 
     -- | condition  Optional, string
     -- This parameter specifies a logical expression of conditions that determine

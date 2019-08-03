@@ -76,7 +76,7 @@ parseCliCmdSendMessage = CliCmdSendMessage <$>
                   ( long "to"
                  <> short 't'
                  <> help "message to (reg token, notification key or topic)"))
-        <|> fmap (set fcmRegistrationIDs)
+        <|> fmap (set fcmRegistrationIds)
                 (textList
                   ( long "registration-id"
                  <> short 'r'
