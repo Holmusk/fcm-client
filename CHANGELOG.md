@@ -3,6 +3,11 @@
 `fcm-client` uses [PVP Versioning][1].
 The changelog is available [on GitHub][2].
 
+## 0.3.0.0
+
+* [#11](https://github.com/Holmusk/fcm-client/issues/11)
+  Allow GHC-8.8.4
+
 ## 0.2.0.0 — Sep 18, 2019
 
 * [#3](https://github.com/holmusk/fcm-client/issues/3):

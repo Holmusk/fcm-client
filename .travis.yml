@@ -20,6 +20,7 @@ matrix:
 
   - ghc: 8.6.5
     env: STACK_YAML="$TRAVIS_BUILD_DIR/stack.yaml"
+  - ghc: 8.8.4
 
 install:
   - |
@@ -37,7 +38,7 @@ script:
     if [ -z "$STACK_YAML" ]; then
        cabal test --enable-test
     else
-      stack test --system-ghc 
+      stack test --system-ghc
     fi
 
 notifications:
